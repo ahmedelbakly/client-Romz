@@ -1,26 +1,29 @@
-import axios from 'axios';
+import axios from 'axios'
+import { serverUrl } from '../constant'
 
 // Create an axios instance
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:4000/', // Your API base URL
-});
+  baseURL: serverUrl // Your API base URL
+})
 
 // Set up a request interceptor to add the token from localStorage
 axiosInstance.interceptors.request.use(
-  (config) => {
+  config => {
     // Retrieve the token from localStorage
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem('token')
+    console.log(token);
+    
 
     // If the token exists, add it to the Authorization header
     if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
+      config.headers['Authorization'] = `Bearer ${token}`
     }
 
-    return config;
+    return config
   },
-  (error) => {
-    return Promise.reject(error);
+  error => {
+    return Promise.reject(error)
   }
-);
+)
 
-export default axiosInstance;
+export default axiosInstance

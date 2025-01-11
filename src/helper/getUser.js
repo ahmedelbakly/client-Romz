@@ -1,18 +1,11 @@
-// create functions to get user data from localStorage
-import { useState } from "react";
-import axiosInstance from "./axiosInstance";
 
-export const GetUser = () => {
+import axiosInstance from './axiosInstance'
+
+export const getUser = async() => {
   try {
-    const [user, setUser] = useState(null);
-
-    axiosInstance.get("/user").then((res) => {
-      setUser(res.data.user);
-    });
-    return user;
+    const user = await axiosInstance.get('/user/userOnAuth')
+    return user.data.data
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
-};
-
-
+}

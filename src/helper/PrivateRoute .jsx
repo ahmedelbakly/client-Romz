@@ -1,14 +1,15 @@
-import { Navigate } from "react-router-dom";
-
-// eslint-disable-next-line react/prop-types
-function PrivateRoute({ element, user }) {
-  if (!user) {
-    // If no user is authenticated, redirect to the sign-in page
-    return <Navigate to="/" />;
+const isAuthenticated = (user, item, subItem) => {
+  // Validate input to avoid potential runtime errors
+  if (!user || !user.role) {
+    return false; // User is not authenticated if no role is present
   }
 
-  // If user is authenticated, render the protected route
-  return element;
-}
+  // Check if the user is a general user or has specific permissions
+  const isAuth =
+    user.role.name === 'user' || (user.role[item]?.[subItem] ?? false);
 
-export default PrivateRoute;
+  return isAuth;
+};
+
+export default isAuthenticated;
+
