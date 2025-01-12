@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState } from "react";
 import {
   AppBar,
   Toolbar,
@@ -7,77 +7,81 @@ import {
   Menu,
   MenuItem,
   Container,
-  IconButton
-} from '@mui/material'
-import MenuIcon from '@mui/icons-material/Menu'
-import { useUser } from '../../hooks/useUser'
-import { Link } from 'react-router-dom'
-import isAuthenticated from '../../helper/PrivateRoute '
+  IconButton,
+} from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import { useUser } from "../../hooks/useUser";
+import { Link, useNavigate } from "react-router-dom";
+import isAuthenticated from "../../helper/PrivateRoute ";
 
 const Navbar = () => {
-  const { user, logout } = useUser()
+  const { user, logout } = useUser();
+  const navigate = useNavigate();
 
-  const [anchorEl, setAnchorEl] = useState(null)
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const handleMenuOpen = event => {
-    setAnchorEl(event.currentTarget)
-    setIsMenuOpen(true)
-  }
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+    setIsMenuOpen(true);
+  };
 
   const handleMenuClose = () => {
-    setAnchorEl(null)
-    setIsMenuOpen(false)
-  }
+    setAnchorEl(null);
+    setIsMenuOpen(false);
+  };
+  const handleNavigate = (path) => {
+    navigate(path);
+  };
 
   return (
-    <AppBar position='sticky'>
+    <AppBar position="sticky">
       <Toolbar>
         {/* Logo or Title */}
-        <Typography variant='h6' sx={{ flexGrow: 1, minWidth: 'max-content' }}>
+        <Typography variant="h6" sx={{ flexGrow: 1, minWidth: "max-content" }} onClick={() => handleNavigate("/")}>
           Task CMS
         </Typography>
 
         {/* Desktop Menu */}
         <Container
           sx={{
-            display: { xs: 'none', md: 'flex' },
-            justifyContent: 'flex-end'
+            display: { xs: "none", md: "flex" },
+            justifyContent: "flex-end",
           }}
         >
           {user ? (
             <>
-              <Link to='/'>
-                <Button color='inherit'>Home</Button>
+              <Link to="/">
+                <Button color="inherit">Home</Button>
               </Link>
-              {isAuthenticated(user, 'users', 'read') && (
-                <Link to='/users'>
-                  <Button color='inherit'>Users</Button>
+              {isAuthenticated(user, "users", "read") && (
+                <Link to="/users">
+                  <Button color="inherit">Users</Button>
                 </Link>
               )}
-              {isAuthenticated(user, 'tasks', 'read') && (
-                <Link to='/tasks'>
-                  <Button color='inherit'>Tasks</Button>
-                </Link>
-              )}
-
-              {isAuthenticated(user, 'roles', 'read') && (
-                <Link to='/roles'>
-                  <Button color='inherit'>Roles</Button>
+              {isAuthenticated(user, "tasks", "read") && (
+                <Link to="/tasks">
+                  <Button color="inherit">Tasks</Button>
                 </Link>
               )}
 
-              <Button color='inherit' onClick={logout}>
+              {isAuthenticated(user, "roles", "read") && (
+                <Link to="/roles">
+                  <Button color="inherit">Roles</Button>
+                </Link>
+              )}
+
+              <Button color="inherit" onClick={logout}>
                 Logout
               </Button>
             </>
           ) : (
             <>
-              <Link to='/signin'>
-                <Button color='inherit'>Login</Button>
+              <Link to="/signin">
+                <Button color="inherit">Login</Button>
               </Link>
-              <Link to='/signup'>
-                <Button color='inherit'>Sign Up</Button>
+              <Link to="/signup">
+                <Button color="inherit">Sign Up</Button>
               </Link>
             </>
           )}
@@ -85,11 +89,11 @@ const Navbar = () => {
 
         {/* Mobile Menu Icon */}
         <IconButton
-          edge='end'
-          color='inherit'
-          aria-label='menu'
+          edge="end"
+          color="inherit"
+          aria-label="menu"
           onClick={handleMenuOpen}
-          sx={{ display: { xs: 'flex', md: 'none' } }}
+          sx={{ display: { xs: "flex", md: "none" } }}
         >
           <MenuIcon />
         </IconButton>
@@ -99,34 +103,34 @@ const Navbar = () => {
           anchorEl={anchorEl}
           open={isMenuOpen}
           onClose={handleMenuClose}
-          sx={{ display: { xs: 'block', md: 'none' } }}
+          sx={{ display: { xs: "block", md: "none" } }}
         >
           {user ? (
             <>
               <MenuItem onClick={handleMenuClose}>
-                <Button color='inherit' href='/home'>
+                <Button color="inherit" href="/home">
                   Home
                 </Button>
               </MenuItem>
-              {isAuthenticated(user, 'users', 'read') && (
+              {isAuthenticated(user, "users", "read") && (
                 <MenuItem onClick={handleMenuClose}>
-                  <Link to='/users'>
-                    <Button color='inherit'>Users</Button>
+                  <Link to="/users">
+                    <Button color="inherit">Users</Button>
                   </Link>
                 </MenuItem>
               )}
-              {isAuthenticated(user, 'tasks', 'read') && (
+              {isAuthenticated(user, "tasks", "read") && (
                 <MenuItem onClick={handleMenuClose}>
-                  <Link to='/tasks'>
-                    <Button color='inherit'>Tasks</Button>
+                  <Link to="/tasks">
+                    <Button color="inherit">Tasks</Button>
                   </Link>
                 </MenuItem>
               )}
 
-              {isAuthenticated(user, 'roles', 'read') && (
+              {isAuthenticated(user, "roles", "read") && (
                 <MenuItem onClick={handleMenuClose}>
-                  <Link to='/roles'>
-                    <Button color='inherit'>Roles</Button>
+                  <Link to="/roles">
+                    <Button color="inherit">Roles</Button>
                   </Link>
                 </MenuItem>
               )}
@@ -134,13 +138,13 @@ const Navbar = () => {
           ) : (
             <>
               <MenuItem onClick={handleMenuClose}>
-                <Link to='/signin'>
-                  <Button color='inherit'>Login</Button>
+                <Link to="/signin">
+                  <Button color="inherit">Login</Button>
                 </Link>
               </MenuItem>
               <MenuItem onClick={handleMenuClose}>
-                <Link to='/signup'>
-                  <Button color='inherit'>Sign Up</Button>
+                <Link to="/signup">
+                  <Button color="inherit">Sign Up</Button>
                 </Link>
               </MenuItem>
             </>
@@ -148,7 +152,7 @@ const Navbar = () => {
         </Menu>
       </Toolbar>
     </AppBar>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;

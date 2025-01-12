@@ -1,5 +1,5 @@
-import { useFormik } from 'formik'
-import * as Yup from 'yup'
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import {
   Grid,
   TextField,
@@ -7,91 +7,91 @@ import {
   MenuItem,
   Typography,
   Container,
-  Paper
-} from '@mui/material'
-import { useState } from 'react'
-import { useEffect } from 'react'
-import { useUser } from '../../hooks/useUser'
-import axiosInstance from '../../helper/axiosInstance'
-import { serverUrl } from '../../constant'
-import { toast } from 'react-toastify'
-import { useNavigate } from 'react-router-dom'
-import isAuthenticated from '../../helper/PrivateRoute '
+  Paper,
+} from "@mui/material";
+import { useState } from "react";
+import { useEffect } from "react";
+import { useUser } from "../../hooks/useUser";
+import axiosInstance from "../../helper/axiosInstance";
+import { serverUrl } from "../../constant";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import isAuthenticated from "../../helper/PrivateRoute ";
+import { hasRequiredPermissions } from "../../helper/helper-functions";
 
 const AddUserForm = () => {
-  const navigate = useNavigate()
-  const { setLoading, user } = useUser()
-  const [roles, setRoles] = useState([])
+  const navigate = useNavigate();
+  const { setLoading, user } = useUser();
+  const [roles, setRoles] = useState([]);
 
-  if (
-    !isAuthenticated(user, 'users', 'read') ||
-    !isAuthenticated(user, 'users', 'add')
-  ) {
-    navigate('/')
+  if (!hasRequiredPermissions(user, "users", ["read", "add"])) {
+    if (!isAuthenticated(user, "users", "read")) {
+      navigate("/users");
+    }
+    navigate("/");
   }
   // Simulating role options (in a real-world scenario, roles would be fetched from the backend)
   useEffect(() => {
     const fetchRoles = async () => {
-      setLoading(true)
       try {
-        const response = await axiosInstance.get('/role')
-        setRoles(response?.data?.data)
+        const response = await axiosInstance.get("/role");
+        setRoles(response?.data?.data);
       } catch (error) {
-        console.log(error)
+        console.log(error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
-    fetchRoles()
-  }, [setLoading])
+    };
+    fetchRoles();
+  }, [setLoading]);
 
   const formik = useFormik({
     initialValues: {
-      name: '',
-      email: '',
-      password: '',
-      role: ''
+      name: "",
+      email: "",
+      password: "",
+      role: "",
     },
     validationSchema: Yup.object({
-      name: Yup.string().required('Name is required'),
+      name: Yup.string().required("Name is required"),
       email: Yup.string()
-        .email('Invalid email format')
-        .required('Email is required'),
+        .email("Invalid email format")
+        .required("Email is required"),
       password: Yup.string()
-        .min(6, 'Password must be at least 6 characters')
-        .required('Password is required'),
-      role: Yup.string().required('Role is required')
+        .min(6, "Password must be at least 6 characters")
+        .required("Password is required"),
+      role: Yup.string().required("Role is required"),
     }),
-    onSubmit: async values => {
+    onSubmit: async (values) => {
       try {
         const response = await axiosInstance.post(
           `${serverUrl}/user/add-new-user`,
           values
-        )
+        );
 
-        console.log(response)
+        console.log(response);
         if (response.data.success) {
-          toast.success('User added successfully', { type: 'success' })
-          navigate('/users')
+          toast.success("User added successfully", { type: "success" });
+          navigate("/users");
         }
       } catch (error) {
-        toast(error.response.data.message, { type: 'error' })
+        toast(error.response.data.message, { type: "error" });
       }
-    }
-  })
+    },
+  });
 
   return (
     <Container
-      maxWidth='md'
+      maxWidth="md"
       style={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
       }}
     >
-      <Paper elevation={3} style={{ padding: '2rem', width: '100%' }}>
-        <Typography variant='h4' align='center' gutterBottom>
+      <Paper elevation={3} style={{ padding: "2rem", width: "100%" }}>
+        <Typography variant="h4" align="center" gutterBottom>
           Add User
         </Typography>
         <form onSubmit={formik.handleSubmit}>
@@ -100,10 +100,10 @@ const AddUserForm = () => {
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                id='name'
-                name='name'
-                label='Name'
-                variant='outlined'
+                id="name"
+                name="name"
+                label="Name"
+                variant="outlined"
                 value={formik.values.name}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -116,10 +116,10 @@ const AddUserForm = () => {
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                id='email'
-                name='email'
-                label='Email'
-                variant='outlined'
+                id="email"
+                name="email"
+                label="Email"
+                variant="outlined"
                 value={formik.values.email}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -132,11 +132,11 @@ const AddUserForm = () => {
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                id='password'
-                name='password'
-                label='Password'
-                variant='outlined'
-                type='password'
+                id="password"
+                name="password"
+                label="Password"
+                variant="outlined"
+                type="password"
                 value={formik.values.password}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -151,21 +151,21 @@ const AddUserForm = () => {
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                id='role'
-                name='role'
-                label='Role'
-                variant='outlined'
+                id="role"
+                name="role"
+                label="Role"
+                variant="outlined"
                 select
                 value={
-                  roles.find(role => role._id === formik.values.role)?.name
+                  roles.find((role) => role._id === formik.values.role)?.name
                 }
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 error={formik.touched.role && Boolean(formik.errors.role)}
                 helperText={formik.touched.role && formik.errors.role}
               >
-                <MenuItem value=''>Select Role</MenuItem>
-                {roles.map(role => (
+                <MenuItem value="">Select Role</MenuItem>
+                {roles.map((role) => (
                   <MenuItem key={role._id} value={role._id}>
                     {role.name}
                   </MenuItem>
@@ -177,21 +177,21 @@ const AddUserForm = () => {
             <Grid
               item
               xs={12}
-              sx={{ display: 'flex', justifyContent: 'space-between' }}
+              sx={{ display: "flex", justifyContent: "space-between" }}
             >
               <Button
-                onClick={() => navigate('/users')}
-                variant='contained'
-                color='primary'
-                size='large'
+                onClick={() => navigate("/users")}
+                variant="contained"
+                color="primary"
+                size="large"
               >
                 Cancel
               </Button>
               <Button
-                type='submit'
-                variant='contained'
-                color='primary'
-                size='large'
+                type="submit"
+                variant="contained"
+                color="primary"
+                size="large"
               >
                 Add User
               </Button>
@@ -200,7 +200,7 @@ const AddUserForm = () => {
         </form>
       </Paper>
     </Container>
-  )
-}
+  );
+};
 
-export default AddUserForm
+export default AddUserForm;

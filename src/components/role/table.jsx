@@ -2,6 +2,8 @@ import { DataGrid } from '@mui/x-data-grid'
 import Paper from '@mui/material/Paper'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
+import isAuthenticated from '../../helper/PrivateRoute '
+import { useUser } from '../../hooks/useUser'
 
 
 // handleDelete
@@ -11,6 +13,7 @@ import { Link } from 'react-router-dom'
 const paginationModel = { page: 0, pageSize: 5 }
 
 export default function DataTable ({ rows, handleDelete }) {
+  const { user } = useUser()
   const columns = [
     {
       field: 'id',
@@ -62,18 +65,20 @@ export default function DataTable ({ rows, handleDelete }) {
               width: '100%'
             }}
           >
-            <Link
+           {isAuthenticated(user, 'roles', 'update')  && <Link
               to={`/roles/edit/${params.row.id}`}
               className='text-blue-500 font-bold py-0 px-4 rounded mr-2'
             >
               Edit
-            </Link>
-            <button
+            </Link>}
+            {
+              isAuthenticated(user, 'roles', 'delete') && <button
               className='text-red-500 font-bold py-0 px-4 rounded'
-              onClick={() => handleDelete(params.row.id)} // Call the delete function here
+              onClick={() => handleDelete(params.row.id)}
             >
               Delete
             </button>
+            }
           </div>
         )
     }

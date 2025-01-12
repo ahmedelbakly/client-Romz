@@ -3,14 +3,20 @@ import { useUser } from '../../hooks/useUser'
 const HomePage = () => {
   const { user } = useUser()
 
-  const title = `Welcome, ${user?.name} your role is ${user?.role?.name}`
+  const title = `Welcome, ${user?.name} as ${user?.role?.name === 'admin' ? 'Admin' : 'User'}`
+  const role = `Your role is ${user?.role?.name}`
   return (
-    <div className='min-h-screen bg-gray-100 mt-8'>
+    <div className='min-h-screen bg-gray-100 mt-8 px-4'>
       {/* Header Section */}
-      <h1 className='text-2xl font-bold text-left text-blue-500 mb-8'>{title}</h1>
+      <div className='container mx-auto px-4 py-4'>
+      <div className='container  px-4 py-4 bg-stone-800 text-white w-full  rounded-lg shadow-lg'>
+      <h1 className='text-3xl font-bold text-left  mb-4 capitalize m-0'>{title}</h1>
+      <h2 className='text-2xl font-semibold  mb-4 capitalize'>{role}</h2>
+      </div>
+      </div>
 
       {/* Main Content */}
-      <main className='container mx-auto px-4 py-8'>
+      <main className='container mx-auto px-4 py-8 '>
         {user?.role?.name === 'admin' ? (
           <section id='admin' className='mb-12'>
             <h2 className='text-xl font-semibold text-blue-600 mb-4'>

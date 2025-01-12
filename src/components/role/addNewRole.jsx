@@ -16,16 +16,17 @@ import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../../hooks/useUser'
 import isAuthenticated from '../../helper/PrivateRoute '
+import { hasRequiredPermissions } from '../../helper/helper-functions'
 
 const AddRoleForm = () => {
   const navigate = useNavigate()
 
   const { user, setLoading } = useUser()
-  if (
-    !isAuthenticated(user, 'roles', 'read') ||
-    !isAuthenticated(user, 'roles', 'add')
-  ) {
-    navigate('/')
+  if (!hasRequiredPermissions(user, "roles", ["read", "add"])) {
+    if (!isAuthenticated(user, "roles", "read")) {
+      navigate("/roles");
+    }
+    navigate("/");
   }
 
   const formik = useFormik({
@@ -76,7 +77,7 @@ const AddRoleForm = () => {
         }
         label={`Select All ${groupName}`}
       />
-      {['add', 'read', 'update', 'delete'].map(action => (
+      {['read', "add", 'update', 'delete'].map(action => (
         <FormControlLabel
           key={action}
           control={

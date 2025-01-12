@@ -2,10 +2,13 @@ import { DataGrid } from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import isAuthenticated from "../../helper/PrivateRoute ";
+import { useUser } from "../../hooks/useUser";
 
 const paginationModel = { page: 0, pageSize: 5 };
 
 export default function DataTable({ rows, handleDelete }) {
+  const { user } = useUser();
   const columns = [
     {
       field: "id",
@@ -62,7 +65,7 @@ export default function DataTable({ rows, handleDelete }) {
       headerAlign: "center",
       renderCell: (params) => (
         <span title={params.value}>{params.value?.split("T")[0]}</span>
-      )
+      ),
     },
     {
       field: "userId",
@@ -91,18 +94,23 @@ export default function DataTable({ rows, handleDelete }) {
             width: "100%",
           }}
         >
-          <Link
-            to={`/tasks/edit/${params.row.id}`}
-            className="text-blue-500 font-bold py-0 px-4 rounded mr-2"
-          >
-            Edit
-          </Link>
-          <button
-            className="text-red-500 font-bold py-0 px-4 rounded"
-            onClick={() => handleDelete(params.row.id)}
-          >
-            Delete
-          </button>
+          {isAuthenticated(user, "tasks", "update") && (
+            <Link
+              to={`/tasks/edit/${params.row.id}`}
+              className="text-blue-500 font-bold py-0 px-4 rounded mr-2"
+            >
+              Edit
+            </Link>
+          )}
+
+          {isAuthenticated(user, "tasks", "delete") && (
+            <button
+              onClick={() => handleDelete(params.row.id)}
+              className="text-red-500 font-bold py-0 px-4 rounded"
+            >
+              Delete
+            </button>
+          )}
         </div>
       ),
     },

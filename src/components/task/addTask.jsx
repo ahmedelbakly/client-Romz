@@ -14,12 +14,20 @@ import axiosInstance from '../../helper/axiosInstance'
 import { useUser } from '../../hooks/useUser'
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
+import { hasRequiredPermissions } from '../../helper/helper-functions'
+import isAuthenticated from '../../helper/PrivateRoute '
 
 const AddTaskForm = () => {
   const navigate = useNavigate()
-  const { setLoading } = useUser()
-
+  const { setLoading,user } = useUser()
   const [users, setUsers] = useState([])
+
+  if (!hasRequiredPermissions(user, "tasks", ["read", "add"])) {
+    if (!isAuthenticated(user, "tasks", "read")) {
+      navigate("/tasks");
+    }
+    navigate("/");
+  }
 
   // Fetch users function
   useEffect(() => {
@@ -193,9 +201,20 @@ const AddTaskForm = () => {
             </Grid>
 
             {/* Submit Button */}
-            <Grid item xs={12}>
+            <Grid
+              item
+              xs={12}
+              sx={{ display: 'flex', justifyContent: 'space-between' }}
+            >
               <Button
-                fullWidth
+                onClick={() => navigate('/tasks')}
+                variant='contained'
+                color='primary'
+                size='large'
+              >
+                Cancel
+              </Button>
+              <Button
                 type='submit'
                 variant='contained'
                 color='primary'

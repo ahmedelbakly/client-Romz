@@ -15,10 +15,22 @@ import axiosInstance from '../../helper/axiosInstance'
 import { serverUrl } from '../../constant'
 import { toast } from 'react-toastify'
 import { useNavigate, useParams } from 'react-router-dom'
+import { hasRequiredPermissions } from '../../helper/helper-functions'
+import { useUser } from '../../hooks/useUser'
+
 
 const EditRoleForm = () => {
   const navigate = useNavigate()
   const { roleId } = useParams() // Get roleId from URL
+const { user } = useUser()
+
+
+  if (!hasRequiredPermissions(user, "roles", ["read", "update"])) {
+    if (hasRequiredPermissions(user, "roles", ["read"])) {
+          navigate("/roles");
+    }
+   navigate("/");
+  }
   const [initialValues, setInitialValues] = useState({
     name: '',
     tasks: { add: false, read: false, update: false, delete: false },
@@ -67,7 +79,7 @@ const EditRoleForm = () => {
   // Render permissions (checkboxes)
   const renderPermissions = groupName => (
     <>
-      {['add', 'read', 'update', 'delete'].map(action => (
+      {['read','add',  'update', 'delete'].map(action => (
         <FormControlLabel
           key={action}
           control={

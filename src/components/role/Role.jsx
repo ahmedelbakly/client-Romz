@@ -56,11 +56,13 @@ const Roles = () => {
         <Typography variant='h4' className='text-white'>
           Roles
         </Typography>
-        <Link to={'/roles/add'}>
+        {
+          isAuthenticated(user, 'roles', 'add') &&<Link to={'/roles/add'}>
           <Button variant='contained' color='primary'>
             Add Role
           </Button>
         </Link>
+        }
       </Grid2>
       <Grid2 container spacing={2}>
         <DataTable  rows={roles} handleDelete={handleDelete}/>

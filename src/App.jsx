@@ -18,6 +18,7 @@ import EditRoleForm from './components/role/EditRoleForm'
 import NotFound from './helper/Not-found'
 import EditUserForm from './components/user/editUsaer'
 import EditTaskForm from './components/task/EditTaskForm'
+import TwoFactor from './components/auth/two-factor-page'
 
 function App () {
   // Define routes with a `protected` flag where necessary
@@ -37,7 +38,9 @@ function App () {
     { path: '/roles/edit/:roleId', element: <EditRoleForm />, protected: true },
 
     { path: '/', element: <HomePage />, protected: true },
-    { path: '*', element: <NotFound />, protected: false } // Handle 404 errors
+    { path: '*', element: <NotFound />, protected: false },
+    { path: '/two-factor', element: <TwoFactor />, protected: false },
+     // Handle 404 errors
   ]
 
   return (
